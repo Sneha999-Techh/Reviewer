@@ -1,25 +1,25 @@
 # Use OpenJDK 17 slim image
 FROM openjdk:17-jdk-slim
 
-# Set working directory
+# Set working directory inside the container
 WORKDIR /app
 
-# Copy Maven wrapper and pom.xml
+# Copy Maven wrapper and pom.xml for dependency caching
 COPY mvnw .
 COPY .mvn .mvn
 COPY pom.xml .
 
-# Copy source code
+# Download dependencies (cache layer)
+RUN chmod +x mvnw && ./mvnw dependency:go-offline
+
+# Copy the rest of the source code
 COPY src ./src
 
-# Make mvnw executable
-RUN chmod +x mvnw
-
-# Build project (skip tests for faster build)
+# Build the Spring Boot app (skip tests)
 RUN ./mvnw package -DskipTests
 
-# Expose the port for Render
+# Expose port 8080 (Spring Boot default)
 EXPOSE 8080
 
-# Run the Spring Boot app
+# Run the Spring Boot application
 CMD ["java", "-jar", "target/reviewer-0.0.1-SNAPSHOT.jar"]
