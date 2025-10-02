@@ -15,6 +15,7 @@ public class CorsConfig {
             public void addCorsMappings(CorsRegistry registry) {
                 registry.addMapping("/**")
                         .allowedOrigins(
+                            "https://reviewers.teamtarang.co.in/reviewers",
                             "http://localhost:4200",
                             "https://reviewers-kohl.vercel.app",
                             "https://reviewers-h6jejskat-sachingupta82s-projects.vercel.app"
